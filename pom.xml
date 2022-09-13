@@ -7,6 +7,7 @@
         <module>stock</module>
         <module>order-nacos</module>
         <module>stock-nacos</module>
+        <module>order-openfeign</module>
     </modules>
 
     <groupId>com.tulingxueyuan</groupId>
