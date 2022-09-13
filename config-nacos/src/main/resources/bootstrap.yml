@@ -1,0 +1,11 @@
+
+spring:
+  application:
+    name: com.tuilingmall.order.redis
+  cloud:
+    nacos:
+      server-addr: 10.100.103.124:8847
+      username: nacos
+      password: nacos
+      config:
+          namespace: public
