@@ -19,7 +19,7 @@ public class StockController {
 
     @RequestMapping("reduce")
     public String reduct() throws InterruptedException {
-        TimeUnit.SECONDS.sleep(5000);
+//        TimeUnit.SECONDS.sleep(5000);
         System.out.println("扣减库存");
         return "扣减库存" + port;
     }
