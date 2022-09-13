@@ -1,9 +1,12 @@
 package com.tulingxueyuan.order.controller;
 
+import com.tulingxueyuan.order.feign.StockFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.Resource;
 
 /**
  * @author chengsukai
@@ -13,13 +16,13 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/order")
 public class OrderController {
 
-    @Autowired
-    RestTemplate restTemplate;
+    @Resource
+    StockFeignService stockFeignService;
 
     @RequestMapping("/add")
     public String add() {
         System.out.println("下单成功");
-        String message = restTemplate.getForObject("http://stock-service/stock/reduce", String.class);
-        return "order" + message;
+        String msg = stockFeignService.reduct();
+        return "Hello Feign" + msg;
     }
 }
