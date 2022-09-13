@@ -19,7 +19,7 @@ public class OrderController {
     @RequestMapping("/add")
     public String add() {
         System.out.println("下单成功");
-        String message = restTemplate.getForObject("http://localhost:8011/stock/reduce", String.class);
+        String message = restTemplate.getForObject("http://stock-service/stock/reduce", String.class);
         return "order" + message;
     }
 }
