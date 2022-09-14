@@ -1,0 +1,24 @@
+server:
+  port: 8020
+spring:
+  application:
+    name: order-service
+  cloud:
+    nacos:
+      server-addr: 10.100.103.124:8847
+      discovery:
+        username: nacos
+        password: nacos
+        namespace: public
+logging:
+  level:
+    com.tulingxueyuan.order.feign: debug
+#feign:
+#  client:
+#    config:
+#      stock-service:
+#        connectTimeout: 5000
+#        readTimeout: 10000
+feign:
+  sentinel:
+    enabled: true
