@@ -9,6 +9,7 @@
         <module>stock-nacos</module>
         <module>order-openfeign</module>
         <module>config-nacos</module>
+        <module>order-sentinel</module>
     </modules>
 
     <groupId>com.tulingxueyuan</groupId>

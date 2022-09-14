@@ -1,0 +1,9 @@
+server:
+  port: 8010
+spring:
+  application:
+    name: order-sentinel
+  cloud:
+    sentinel:
+      transport:
+        dashboard: 10.100.103.124:8858
