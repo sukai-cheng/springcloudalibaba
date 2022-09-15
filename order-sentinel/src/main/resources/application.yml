@@ -1,5 +1,5 @@
 server:
-  port: 8010
+  port: 8861
 spring:
   application:
     name: order-sentinel
@@ -7,3 +7,4 @@ spring:
     sentinel:
       transport:
         dashboard: 10.100.103.124:8858
+      web-context-unify: false # 默认将调用链路收敛，导致链路流控效果无效
