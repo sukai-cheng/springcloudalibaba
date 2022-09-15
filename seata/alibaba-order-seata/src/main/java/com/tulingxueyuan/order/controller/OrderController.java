@@ -23,14 +23,18 @@ public class OrderController {
     @Resource
     OrderServiceImpl orderServiceImpl;
 
+    //    @GetMapping("/add")
+//    public String add() {
+//        OrderTbl order = new OrderTbl();
+//        order.setId(1L);
+//        order.setOrderStatus(0);
+//        order.setTotalAmount(100);
+//
+//        orderServiceImpl.create(order);
+//        return "下单成功";
+//    }
     @GetMapping("/add")
     public String add() {
-        OrderTbl order = new OrderTbl();
-        order.setId(1L);
-        order.setOrderStatus(0);
-        order.setTotalAmount(100);
-
-        orderServiceImpl.create(order);
         return "下单成功";
     }
 }

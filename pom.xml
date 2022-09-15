@@ -12,6 +12,7 @@
         <module>order-sentinel</module>
         <module>order-openfeign-sentinel</module>
         <module>seata</module>
+        <module>gateway</module>
     </modules>
 
     <groupId>com.tulingxueyuan</groupId>
