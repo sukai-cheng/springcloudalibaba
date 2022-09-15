@@ -9,6 +9,8 @@
     <modules>
         <module>order-seata</module>
         <module>stock-seata</module>
+        <module>alibaba-order-seata</module>
+        <module>alibaba-stock-seata</module>
     </modules>
     <artifactId>seata</artifactId>
     <packaging>pom</packaging>

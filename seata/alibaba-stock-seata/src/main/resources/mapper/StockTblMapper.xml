@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tulingxueyuan.stock.mapper.StockTblMapper">
+    <resultMap id="BaseResultMap" type="com.tulingxueyuan.stock.pojo.StockTbl">
+        <!--@mbg.generated-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="product_id" jdbcType="INTEGER" property="productId"/>
+        <result column="total_count" jdbcType="INTEGER" property="totalCount"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id,
+        product_id,
+        total_count
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from seata_stock.stock_tbl
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        <!--@mbg.generated-->
+        delete
+        from seata_stock.stock_tbl
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <delete id="deleteByProductId" parameterType="java.lang.Long">
+        delete
+        from seata_stock.stock_tbl
+        where product_id = #{productId,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.tulingxueyuan.stock.pojo.StockTbl"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into seata_stock.stock_tbl (product_id, total_count)
+        values (#{productId,jdbcType=INTEGER}, #{totalCount,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.tulingxueyuan.stock.pojo.StockTbl"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into seata_stock.stock_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productId != null">
+                product_id,
+            </if>
+            <if test="totalCount != null">
+                total_count,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productId != null">
+                #{productId,jdbcType=INTEGER},
+            </if>
+            <if test="totalCount != null">
+                #{totalCount,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.tulingxueyuan.stock.pojo.StockTbl">
+        <!--@mbg.generated-->
+        update seata_stock.stock_tbl
+        <set>
+            <if test="productId != null">
+                product_id = #{productId,jdbcType=INTEGER},
+            </if>
+            <if test="totalCount != null">
+                total_count = #{totalCount,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.tulingxueyuan.stock.pojo.StockTbl">
+        <!--@mbg.generated-->
+        update seata_stock.stock_tbl
+        set product_id  = #{productId,jdbcType=INTEGER},
+            total_count = #{totalCount,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="reduct">
+        update seata_stock.stock_tbl
+        set total_count = total_count - 1
+        where product_id = #{productId,jdbcType=BIGINT}
+    </update>
+</mapper>
