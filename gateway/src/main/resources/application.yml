@@ -4,10 +4,16 @@ spring:
   application:
     name: api-gateway
   cloud:
+    nacos:
+      server-addr: 10.100.103.124:8847
+      discovery:
+        username: nacos
+        password: nacos
+        namespace: public
     gateway:
       routes:
         - id: order_route            # 路由的唯一标识
-          uri: http://localhost:8019 # 需要转发的地址
+          uri: lb://order-service # load-balance 使用nacos中的负载均衡策略
           predicates:
             - Path=/order-serv/**
             ## http://localhost:8088/order-serv/order/add
