@@ -15,6 +15,27 @@ spring:
         username: nacos
         password: nacos
         namespace: public
+    alibaba:
+      seata:
+        tx-service-group: guangzhou
 mybatis:
   mapper-locations: classpath:/mapper/*Mapper.xml
   type-aliases-package: com.tulingxueyuan.stock.pojo
+  configuration:
+    map-underscore-to-camel-case: true
+seata:
+  registry:
+    type: nacos
+    nacos:
+      server-addr: 10.100.103.124:8847
+      application: seata-server
+      username: nacos
+      password: nacos
+      group: SEATA_GROUP
+  config:
+    type: nacos
+    nacos:
+      server-addr: 10.100.103.124:8847
+      username: nacos
+      password: nacos
+      group: SEATA_GROUP
