@@ -1,11 +1,10 @@
 package com.tulingxueyuan.stock.controller;
 
-import com.tulingxueyuan.stock.service.StockService;
+import com.tulingxueyuan.stock.service.impl.StockServiceImpl;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 
@@ -18,11 +17,11 @@ import javax.annotation.Resource;
 public class StockController {
 
     @Resource
-    StockService stockService;
+    StockServiceImpl stockServiceImpl;
 
     @PostMapping("/reduct")
     public String reduct(@RequestParam(value = "productId") Long productId) {
-        stockService.reduct(productId);
+        stockServiceImpl.reduct(productId);
         return "扣减库存";
     }
 }

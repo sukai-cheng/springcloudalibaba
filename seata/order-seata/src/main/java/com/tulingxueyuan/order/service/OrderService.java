@@ -7,5 +7,5 @@ import com.tulingxueyuan.order.pojo.OrderTbl;
  * @since 2022-09-15 12:18
  */
 public interface OrderService {
-    OrderTbl create(OrderTbl orderTbl);
+    void create(OrderTbl orderTbl);
 }

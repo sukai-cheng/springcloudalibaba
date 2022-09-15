@@ -30,8 +30,8 @@
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.tulingxueyuan.order.pojo.OrderTbl"
             useGeneratedKeys="true">
         <!--@mbg.generated-->
-        insert into order_tbl (order_status, total_amount)
-        values (#{orderStatus,jdbcType=INTEGER}, #{totalAmount,jdbcType=INTEGER})
+        insert into order_tbl (id, order_status, total_amount)
+        values (#{id,jdbcType=BIGINT}, #{orderStatus,jdbcType=INTEGER}, #{totalAmount,jdbcType=INTEGER})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.tulingxueyuan.order.pojo.OrderTbl"
             useGeneratedKeys="true">

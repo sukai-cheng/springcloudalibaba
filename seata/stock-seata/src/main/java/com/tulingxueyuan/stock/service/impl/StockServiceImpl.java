@@ -3,6 +3,7 @@ package com.tulingxueyuan.stock.service.impl;
 
 import com.tulingxueyuan.stock.mapper.StockTblMapper;
 import com.tulingxueyuan.stock.service.StockService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
@@ -10,6 +11,7 @@ import javax.annotation.Resource;
  * @author chengsukai
  * @since 2022-09-15 12:48
  */
+@Service
 public class StockServiceImpl implements StockService {
     @Resource
     StockTblMapper stockTblMapper;
