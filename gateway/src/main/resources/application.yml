@@ -11,11 +11,18 @@ spring:
         password: nacos
         namespace: public
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*" # 跨域允许来源
+            allowedMethods:
+              - GET
+              - POST
       routes:
         - id: order_route            # 路由的唯一标识
           uri: lb://order-service # load-balance 使用nacos中的负载均衡策略
           predicates:
-#            - Path=/order-serv/**d
+            #            - Path=/order-serv/**d
             - Path=/order/**d
             ## http://localhost:8088/order-serv/order/add
             ## 路由到
