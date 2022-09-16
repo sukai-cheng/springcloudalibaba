@@ -15,9 +15,13 @@ spring:
         - id: order_route            # 路由的唯一标识
           uri: lb://order-service # load-balance 使用nacos中的负载均衡策略
           predicates:
-            - Path=/order-serv/**
+#            - Path=/order-serv/**d
+            - Path=/order/**d
             ## http://localhost:8088/order-serv/order/add
             ## 路由到
             ## http://localhost:8020/order-serv/order/add
           filters:
-            - StripPrefix=1 #转发前去除第一层路径
+            - PrefixPath=/xushu #添加前缀, 对应微服务需要添加context-path
+#            - RedirectTo=302, https://www.baidu.com
+            - CheckAuth=xushu
+#            - StripPrefix=1 #转发前去除第一层路径
