@@ -23,5 +23,5 @@ spring:
           filters:
             - PrefixPath=/xushu #添加前缀, 对应微服务需要添加context-path
 #            - RedirectTo=302, https://www.baidu.com
-            - CheckAuth=xushu #定义局部过滤器
+#            - CheckAuth=xushu #定义局部过滤器
 #            - StripPrefix=1 #转发前去除第一层路径
