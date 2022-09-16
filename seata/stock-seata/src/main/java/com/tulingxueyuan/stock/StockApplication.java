@@ -14,9 +14,9 @@ import org.springframework.web.client.RestTemplate;
  */
 @SpringBootApplication
 @MapperScan("com.tulingxueyuan.stock")
-public class OrderApplication {
+public class StockApplication {
     public static void main(String[] args) {
-        SpringApplication.run(OrderApplication.class, args);
+        SpringApplication.run(StockApplication.class, args);
     }
 
     @Bean
