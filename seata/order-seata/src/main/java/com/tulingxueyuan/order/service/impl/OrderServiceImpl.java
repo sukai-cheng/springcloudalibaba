@@ -31,9 +31,6 @@ public class OrderServiceImpl implements OrderService {
         orderTblMapper.insert(order);
         MultiValueMap<String, Object> paramMap = new LinkedMultiValueMap<>();
         paramMap.add("productId", order.getId());
-        String msg = restTemplate.postForObject("http://stock-seata/stock/reduct", paramMap, String.class);
-
-        int a = 1 / 0;
-
+        String msg = restTemplate.postForObject("http://alibaba-stock-seata/stock/reduct", paramMap, String.class);
     }
 }

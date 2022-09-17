@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.util.Random;
 
 /**
  * @author chengsukai
@@ -23,18 +24,20 @@ public class OrderController {
     @Resource
     OrderServiceImpl orderServiceImpl;
 
-    //    @GetMapping("/add")
-//    public String add() {
-//        OrderTbl order = new OrderTbl();
-//        order.setId(1L);
-//        order.setOrderStatus(0);
-//        order.setTotalAmount(100);
-//
-//        orderServiceImpl.create(order);
-//        return "下单成功";
-//    }
+    Random random = new Random();
+
     @GetMapping("/add")
     public String add() {
+        OrderTbl order = new OrderTbl();
+        order.setId(Long.valueOf(String.valueOf(random.nextInt(100))));
+        order.setOrderStatus(0);
+        order.setTotalAmount(100);
+
+        orderServiceImpl.create(order);
         return "下单成功";
     }
+//    @GetMapping("/add")
+//    public String add() {
+//        return "下单成功";
+//    }
 }

@@ -13,10 +13,10 @@ spring:
     sentinel:
       transport:
         dashboard: 10.100.103.124:8858
-#      scg:
-#        fallback:
-#          mode: response
-#          response-body: "{code:'',message:''}"
+    #      scg:
+    #        fallback:
+    #          mode: response
+    #          response-body: "{code:'',message:''}"
     gateway:
       #      globalcors:
       #        cors-configurations:
@@ -26,8 +26,8 @@ spring:
       #              - GET
       #              - POST
       routes:
-        - id: order_route            # 路由的唯一标识
-          uri: lb://order-service # load-balance 使用nacos中的负载均衡策略
+        - id: order_route           # 路由的唯一标识
+          uri: lb://alibaba-order-seata # load-balance 使用nacos中的负载均衡策略
           predicates:
             #            - Path=/order-serv/**d
             - Path=/order/**
@@ -35,7 +35,7 @@ spring:
             ## 路由到
             ## http://localhost:8020/order-serv/order/add
           filters:
-            - PrefixPath=/xushu #添加前缀, 对应微服务需要添加context-path
+#            - PrefixPath=/xushu #添加前缀, 对应微服务需要添加context-path
 #            - RedirectTo=302, https://www.baidu.com
 #            - CheckAuth=xushu #定义局部过滤器
 #            - StripPrefix=1 #转发前去除第一层路径
