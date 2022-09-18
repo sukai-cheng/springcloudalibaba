@@ -43,3 +43,4 @@ mybatis:
 logging:
   level:
     com.tulingxueyuan.order.feign: debug
+  config: classpath:logback-spring.xml
