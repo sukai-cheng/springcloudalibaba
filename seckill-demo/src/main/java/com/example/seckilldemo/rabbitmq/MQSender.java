@@ -32,6 +32,7 @@ public class MQSender {
      **/
     public void sendSeckillMessage(String message) {
         log.info("发送消息" + message);
+        // 交换机和路由key
         rabbitTemplate.convertAndSend("seckillExchange", "seckill.message", message);
     }
 

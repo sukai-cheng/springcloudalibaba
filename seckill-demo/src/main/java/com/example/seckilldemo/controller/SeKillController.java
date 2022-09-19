@@ -18,10 +18,8 @@ import com.example.seckilldemo.vo.SeckillMessage;
 import com.wf.captcha.ArithmeticCaptcha;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.script.RedisScript;
@@ -30,7 +28,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
@@ -41,10 +39,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 秒杀
- *
- * @author: LC
- * @date 2022/3/4 11:34 上午
- * @ClassName: SeKillController
  */
 @Slf4j
 @Controller
@@ -52,20 +46,20 @@ import java.util.concurrent.TimeUnit;
 @Api(value = "秒杀", tags = "秒杀")
 public class SeKillController implements InitializingBean {
 
-    @Autowired
+    @Resource
     private ITGoodsService itGoodsService;
-    @Autowired
+    @Resource
     private ITSeckillOrderService itSeckillOrderService;
-    @Autowired
+    @Resource
     private ITOrderService orderService;
-    @Autowired
-    private RedisTemplate redisTemplate;
-    @Autowired
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+    @Resource
     private MQSender mqSender;
-    @Autowired
+    @Resource
     private RedisScript<Long> redisScript;
 
-    private Map<Long, Boolean> EmptyStockMap = new HashMap<>();
+    private final Map<Long, Boolean> EmptyStockMap = new HashMap<>();
 
 
     @ApiOperation("获取验证码")
@@ -85,42 +79,21 @@ public class SeKillController implements InitializingBean {
         try {
             captcha.out(response.getOutputStream());
         } catch (IOException e) {
-            log.error("验证码生成失败", e.getMessage());
+            log.error("验证码生成失败 " + e.getMessage());
         }
     }
 
     /**
      * 获取秒杀地址
-     *
-     * @param tuser
-     * @param goodsId
-     * @param captcha
-     * @return com.example.seckilldemo.vo.RespBean
-     * @author LiChao
-     * @operation add
-     * @date 4:04 下午 2022/3/9
      **/
     @ApiOperation("获取秒杀地址")
-    @AccessLimit(second = 5, maxCount = 5, needLogin = true)
+    @AccessLimit(second = 5, maxCount = 5)
     @GetMapping(value = "/path")
     @ResponseBody
-    public RespBean getPath(TUser tuser, Long goodsId, String captcha, HttpServletRequest request) {
+    public RespBean getPath(TUser tuser, Long goodsId, String captcha) {
         if (tuser == null) {
             return RespBean.error(RespBeanEnum.SESSION_ERROR);
         }
-//        ValueOperations valueOperations = redisTemplate.opsForValue();
-        //限制访问次数，5秒内访问5次
-//        String uri = request.getRequestURI();
-//        captcha = "0";
-//        Integer count = (Integer) valueOperations.get(uri + ":" + tuser.getId());
-//        if (count == null) {
-//            valueOperations.set(uri + ":" + tuser.getId(), 1, 5, TimeUnit.SECONDS);
-//        } else if (count < 5) {
-//            valueOperations.increment(uri + ":" + tuser.getId());
-//        } else {
-//            return RespBean.error(RespBeanEnum.ACCESS_LIMIT_REACHED);
-//        }
-
 
         boolean check = orderService.checkCaptcha(tuser, goodsId, captcha);
         if (!check) {
@@ -134,12 +107,8 @@ public class SeKillController implements InitializingBean {
     /**
      * 获取秒杀结果
      *
-     * @param tUser
-     * @param goodsId
      * @return orderId 成功 ；-1 秒杀失败 ；0 排队中
      * @author LiChao
-     * @operation add
-     * @date 7:04 下午 2022/3/8
      **/
     @ApiOperation("获取秒杀结果")
     @GetMapping("getResult")
@@ -155,12 +124,7 @@ public class SeKillController implements InitializingBean {
     /**
      * 秒杀功能
      *
-     * @param user
-     * @param goodsId
      * @return java.lang.String
-     * @author LC
-     * @operation add
-     * @date 11:36 上午 2022/3/4
      **/
     @ApiOperation("秒杀功能")
     @RequestMapping(value = "/{path}/doSeckill", method = RequestMethod.POST)
@@ -170,7 +134,7 @@ public class SeKillController implements InitializingBean {
             return RespBean.error(RespBeanEnum.SESSION_ERROR);
         }
         //优化后代码
-        ValueOperations valueOperations = redisTemplate.opsForValue();
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
         boolean check = orderService.checkPath(user, goodsId, path);
         if (!check) {
             return RespBean.error(RespBeanEnum.REQUEST_ILLEGAL);
@@ -186,56 +150,25 @@ public class SeKillController implements InitializingBean {
             return RespBean.error(RespBeanEnum.EMPTY_STOCK);
         }
         //预减库存
-//        Long stock = valueOperations.decrement("seckillGoods:" + goodsId);
-        Long stock = (Long) redisTemplate.execute(redisScript, Collections.singletonList("seckillGoods:" + goodsId), Collections.EMPTY_LIST);
-        if (stock < 0) {
-            EmptyStockMap.put(goodsId, true);
-            valueOperations.increment("seckillGoods:" + goodsId);
-            return RespBean.error(RespBeanEnum.EMPTY_STOCK);
+        try {
+            Long stock = redisTemplate.execute(redisScript, Collections.singletonList("seckillGoods:" + goodsId), Collections.EMPTY_LIST);
+            if (stock != null && stock < 0) {
+                EmptyStockMap.put(goodsId, true);
+                valueOperations.increment("seckillGoods:" + goodsId);
+                return RespBean.error(RespBeanEnum.EMPTY_STOCK);
+            }
+        } catch (NullPointerException e) {
+            throw new RuntimeException("redis中查询不到key为stock的value值");
         }
         SeckillMessage seckillMessag = new SeckillMessage(user, goodsId);
+        // 因为mq是异步执行的，所以请求会立马返回，达到异步削峰的效果
         mqSender.sendSeckillMessage(JsonUtil.object2JsonStr(seckillMessag));
         return RespBean.success(0);
-
-
-
-
-
-
-
-        /*
-//        model.addAttribute("user", user);
-        GoodsVo goodsVo = itGoodsService.findGoodsVobyGoodsId(goodsId);
-        if (goodsVo.getStockCount() < 1) {
-//            model.addAttribute("errmsg", RespBeanEnum.EMPTY_STOCK.getMessage());
-            return RespBean.error(RespBeanEnum.EMPTY_STOCK);
-        }
-        //判断是否重复抢购
-//        TSeckillOrder seckillOrder = itSeckillOrderService.getOne(new QueryWrapper<TSeckillOrder>().eq("user_id", user.getId()).eq("goods_id", goodsId));
-        TSeckillOrder seckillOrder = (TSeckillOrder) redisTemplate.opsForValue().get("order:" + user.getId() + ":" + goodsVo.getId());
-        if (seckillOrder != null) {
-//            model.addAttribute("errmsg", RespBeanEnum.REPEATE_ERROR.getMessage());
-            return RespBean.error(RespBeanEnum.REPEATE_ERROR);
-        }
-        TOrder tOrder = orderService.secKill(user, goodsVo);
-//        model.addAttribute("order", tOrder);
-//        model.addAttribute("goods", goodsVo);
-        return RespBean.success(tOrder);
-
-         */
 
     }
 
     /**
      * 秒杀功能-废弃
-     *
-     * @param model
-     * @param user
-     * @param goodsId
-     * @return java.lang.String
-     * @author LC
-     * @operation add
-     * @date 11:36 上午 2022/3/4
      **/
     @ApiOperation("秒杀功能-废弃")
     @RequestMapping(value = "/doSeckill2", method = RequestMethod.POST)
@@ -260,15 +193,9 @@ public class SeKillController implements InitializingBean {
 
     /**
      * 系统初始化，把商品库存数量加载到Redis
-     *
-     * @param
-     * @return void
-     * @author LiChao
-     * @operation add
-     * @date 6:29 下午 2022/3/8
-     **/
+     */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         List<GoodsVo> list = itGoodsService.findGoodsVo();
         if (CollectionUtils.isEmpty(list)) {
             return;
