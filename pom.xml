@@ -13,6 +13,8 @@
         <module>order-openfeign-sentinel</module>
         <module>seata</module>
         <module>gateway</module>
+        <module>springboot-rabbitmq</module>
+        <module>seckill-demo</module>
     </modules>
 
     <groupId>com.tulingxueyuan</groupId>

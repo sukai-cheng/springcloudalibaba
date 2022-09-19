@@ -1,0 +1,14 @@
+server:
+  port: 8020
+  servlet:
+    context-path: /xushu
+spring:
+  application:
+    name: rabbitmq-service
+  cloud:
+    nacos:
+      server-addr: 10.100.103.124:8847
+      discovery:
+        username: nacos
+        password: nacos
+        namespace: public
